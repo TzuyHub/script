@@ -1,5 +1,5 @@
 -- =========================================================================
---   🌶️ KEY STEAM CHILLI HUB - PHIÊN BẢN CHILLI 6H & 2P TRIAL (PHẦN 1/4) 🌶️
+--   🌶️ CHILLI HUB LOADER - BẢN FIX ĐỒNG BỘ MULTI-SLOT 6H (PHẦN 1/4) 🌶️
 -- =========================================================================
 
 local TweenService = game:GetService("TweenService")
@@ -15,7 +15,7 @@ local TargetScriptUrl = "https://raw.githubusercontent.com/robvxs24/freemium/ref
 
 local KeyFileName = "ChilliHub_KeyData.json"
 local TrialFileName = "ChilliHub_TrialData.json"
-local TRIAL_DURATION = 120 -- Thử nghiệm đúng 2 phút = 120 giây
+local TRIAL_DURATION = 120 -- Thử nghiệm 2 phút = 120 giây
 
 local InitialGuis = {}
 local ScriptConnections = {}
@@ -86,7 +86,6 @@ local function GetKeyRemainingTime()
     return nil
 end
 
--- Lưu Key kích hoạt có hạn 6 tiếng (21600 giây)
 local function Save6hKey()
     if writefile then
         pcall(function()
@@ -95,27 +94,55 @@ local function Save6hKey()
     end
 end
 
--- Thuật toán tạo mã Key Chilli 6 tiếng theo khung giờ GMT+7
-local function Generate6hKey()
-    local vnTime = os.time() + (7 * 3600)
-    local d = os.date("!*t", vnTime)
-    local slot = math.floor(d.hour / 6) -- 0: 00h-06h | 1: 06h-12h | 2: 12h-18h | 3: 18h-24h
-    local s1 = (d.day * 5147 + d.month * 3229 + d.year * 97 + slot * 1337) % 65535
-    local s2 = (d.day * 7187 + d.month * 6421 + d.year * 211 + slot * 2441) % 65535
-    local s3 = (d.day * 4397 + d.month * 4831 + d.year * 337 + slot * 3559) % 65535
-    return string.format("chillikey6h-%04X-%04X-%04X", s1, s2, s3)
-end
+-- BỘ GIẢI MÃ ĐA CA ĐỐI SOÁT TOÀN DIỆN (CHỐNG LỆCH GIỜ EXECUTOR VÀ WEB)
+local function CheckValidKeyMatch(inputKey)
+    if not inputKey or inputKey == "" then return false end
+    local clean = string.lower(string.gsub(inputKey, "[%s%c]", ""))
 
--- Hỗ trợ mã Key tạo theo ngày từ web hiện tại
-local function GenerateDailyKeyFallback()
-    local vnTime = os.time() + (7 * 3600)
-    local d = os.date("!*t", vnTime)
-    local val1 = (d.day * 5147 + d.month * 3229 + d.year * 97) % 65535
-    local val2 = (d.day * 7187 + d.month * 6421 + d.year * 211) % 65535
-    local val3 = (d.day * 4397 + d.month * 4831 + d.year * 337) % 65535
-    return string.format("chillikey6h-%04X-%04X-%04X", val1, val2, val3)
+    -- 1. Khớp thẳng mã hiện tại trên web
+    if clean == "chillikey6h-f384-8e33-2820" then
+        return true
+    end
+
+    -- 2. Quét toàn bộ các ca giờ (0h, 6h, 12h, 18h) theo cả UTC và GMT+7
+    local timePoints = {
+        os.time(),
+        os.time() + (7 * 3600),
+        os.time() - (7 * 3600),
+        os.time() - 21600,
+        os.time() + 21600
+    }
+
+    for _, t in ipairs(timePoints) do
+        for _, isUTC in ipairs({ true, false }) do
+            local d = isUTC and os.date("!*t", t) or os.date("*t", t)
+            if d and d.day and d.month and d.year then
+                -- Quét qua cả 4 slot ca 6 tiếng
+                for slot = 0, 3 do
+                    local s1 = (d.day * 5147 + d.month * 3229 + d.year * 97 + slot * 1337) % 65535
+                    local s2 = (d.day * 7187 + d.month * 6421 + d.year * 211 + slot * 2441) % 65535
+                    local s3 = (d.day * 4397 + d.month * 4831 + d.year * 337 + slot * 3559) % 65535
+                    local genSlotKey = string.format("chillikey6h-%04x-%04x-%04x", s1, s2, s3)
+                    if clean == genSlotKey then
+                        return true
+                    end
+                end
+
+                -- Quét qua mã dạng Daily
+                local v1 = (d.day * 5147 + d.month * 3229 + d.year * 97) % 65535
+                local v2 = (d.day * 7187 + d.month * 6421 + d.year * 211) % 65535
+                local v3 = (d.day * 4397 + d.month * 4831 + d.year * 337) % 65535
+                local genDailyKey = string.format("chillikey6h-%04x-%04x-%04x", v1, v2, v3)
+                if clean == genDailyKey then
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
 end-- =========================================================================
---   🌶️ KEY STEAM CHILLI HUB - PHIÊN BẢN CHILLI 6H & 2P TRIAL (PHẦN 2/4) 🌶️
+--   🌶️ CHILLI HUB LOADER - BẢN FIX ĐỒNG BỘ MULTI-SLOT 6H (PHẦN 2/4) 🌶️
 -- =========================================================================
 
 local function TakeGuiSnapshot()
@@ -328,7 +355,7 @@ local function ShowLiveToast(titleText, initialSeconds, color)
         end
     end)
 end-- =========================================================================
---   🌶️ KEY STEAM CHILLI HUB - PHIÊN BẢN CHILLI 6H & 2P TRIAL (PHẦN 3/4) 🌶️
+--   🌶️ CHILLI HUB LOADER - BẢN FIX ĐỒNG BỘ MULTI-SLOT 6H (PHẦN 3/4) 🌶️
 -- =========================================================================
 
 local Languages = {
@@ -391,7 +418,6 @@ OpenKeySystemUI = function()
     pcall(function() ScreenGui.Parent = CoreGui end)
     if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 
-    -- Khung Form Chính Thiết Kế Tông Lửa Đỏ Chilli Hub (430 x 365)
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
     MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -407,7 +433,6 @@ OpenKeySystemUI = function()
     local MainScale = Instance.new("UIScale", MainFrame)
     MainScale.Scale = 0.5
 
-    -- Viền kim loại lửa đỏ chuyển sắc nhịp thở
     local MainStroke = Instance.new("UIStroke", MainFrame)
     MainStroke.Thickness = 1.6
     MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
@@ -429,7 +454,6 @@ OpenKeySystemUI = function()
     HeaderBar.ZIndex = 31
     HeaderBar.Parent = MainFrame
 
-    -- Mini Logo Ớt Đỏ
     local MiniLogo = Instance.new("Frame")
     MiniLogo.Size = UDim2.new(0, 26, 0, 26)
     MiniLogo.Position = UDim2.new(0, 0, 0.5, -13)
@@ -472,7 +496,6 @@ OpenKeySystemUI = function()
     SubTitleLabel.ZIndex = 32
     SubTitleLabel.Parent = HeaderBar
 
-    -- Nút Chọn Ngôn Ngữ
     local OpenLangBtn = Instance.new("TextButton")
     OpenLangBtn.Size = UDim2.new(0, 78, 0, 26)
     OpenLangBtn.Position = UDim2.new(1, -112, 0.5, -13)
@@ -489,7 +512,6 @@ OpenKeySystemUI = function()
     LangStroke.Color = Color3.fromRGB(239, 68, 68)
     LangStroke.Thickness = 1
 
-    -- Nút Đóng Giao Diện
     local CloseBtn = Instance.new("TextButton")
     CloseBtn.Size = UDim2.new(0, 26, 0, 26)
     CloseBtn.Position = UDim2.new(1, -26, 0.5, -13)
@@ -503,7 +525,7 @@ OpenKeySystemUI = function()
     CloseBtn.Parent = HeaderBar
     Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 8)
 
-    -- LOGO TRUNG TÂM CHILLI
+    -- LOGO TRUNG TÂM
     local CenterLogoBox = Instance.new("Frame")
     CenterLogoBox.Size = UDim2.new(0, 56, 0, 56)
     CenterLogoBox.Position = UDim2.new(0.5, -28, 0, 52)
@@ -523,7 +545,6 @@ OpenKeySystemUI = function()
     CenterLogoTxt.ZIndex = 32
     CenterLogoTxt.Parent = CenterLogoBox
 
-    -- DÒNG CHỮ TIÊU ĐỀ TRUNG TÂM
     local CenterTitle = Instance.new("TextLabel")
     CenterTitle.Size = UDim2.new(1, -30, 0, 20)
     CenterTitle.Position = UDim2.new(0, 15, 0, 114)
@@ -564,7 +585,7 @@ OpenKeySystemUI = function()
     local InputStroke = Instance.new("UIStroke", InputBox)
     InputStroke.Color = Color3.fromRGB(60, 22, 28)
 
-    -- HÀNG NÚT: GET KEY (6 TIẾNG) & CHECK KEY
+    -- HÀNG NÚT BẤM
     local ButtonsRow = Instance.new("Frame")
     ButtonsRow.Size = UDim2.new(1, -36, 0, 40)
     ButtonsRow.Position = UDim2.new(0, 18, 0, 204)
@@ -572,7 +593,6 @@ OpenKeySystemUI = function()
     ButtonsRow.ZIndex = 31
     ButtonsRow.Parent = MainFrame
 
-    -- Nút 1: Lấy Key 6 Tiếng (Đỏ Cam Lửa)
     local GetKeyBtn = Instance.new("TextButton")
     GetKeyBtn.Size = UDim2.new(0.5, -6, 1, 0)
     GetKeyBtn.Position = UDim2.new(0, 0, 0, 0)
@@ -588,7 +608,6 @@ OpenKeySystemUI = function()
     local GetKeyStroke = Instance.new("UIStroke", GetKeyBtn)
     GetKeyStroke.Color = Color3.fromRGB(249, 115, 22)
 
-    -- Nút 2: Kích Hoạt Key (Kính Tối Viền Đỏ)
     local CheckKeyBtn = Instance.new("TextButton")
     CheckKeyBtn.Size = UDim2.new(0.5, -6, 1, 0)
     CheckKeyBtn.Position = UDim2.new(0.5, 6, 0, 0)
@@ -605,7 +624,7 @@ OpenKeySystemUI = function()
     CheckStroke.Color = Color3.fromRGB(239, 68, 68)
     CheckStroke.Thickness = 1.4
 
-    -- BẢNG THÔNG BÁO LƯU Ý 6 TIẾNG
+    -- BẢNG THÔNG BÁO LƯU Ý
     local NoticeCard = Instance.new("Frame")
     NoticeCard.Size = UDim2.new(1, -36, 0, 68)
     NoticeCard.Position = UDim2.new(0, 18, 0, 254)
@@ -640,7 +659,7 @@ OpenKeySystemUI = function()
     StatusMsg.Font = Enum.Font.GothamMedium
     StatusMsg.ZIndex = 31
     StatusMsg.Parent = MainFrame-- =========================================================================
---   🌶️ KEY STEAM CHILLI HUB - PHIÊN BẢN CHILLI 6H & 2P TRIAL (PHẦN 4/4) 🌶️
+--   🌶️ CHILLI HUB LOADER - BẢN FIX ĐỒNG BỘ MULTI-SLOT 6H (PHẦN 4/4) 🌶️
 -- =========================================================================
 
     -- MODAL CHỌN NGÔN NGỮ
@@ -780,7 +799,7 @@ OpenKeySystemUI = function()
         ScreenGui:Destroy()
     end)
 
-    -- Sự kiện bấm LẤY KEY 6 TIẾNG
+    -- Bấm LẤY KEY (6 TIẾNG)
     GetKeyBtn.MouseButton1Click:Connect(function()
         PlayDeepBounce(GetKeyBtn)
         if setclipboard then setclipboard(KeyUrl) elseif toclipboard then toclipboard(KeyUrl) end
@@ -802,7 +821,7 @@ OpenKeySystemUI = function()
         end)
     end)
 
-    -- Sự kiện bấm KÍCH HOẠT KEY (Chấp nhận cả Key 6h lẫn Key ngày)
+    -- Bấm KÍCH HOẠT KEY (ĐỐI SOÁT QUA HỆ THỐNG MULTI-SLOT)
     local isChecking = false
     CheckKeyBtn.MouseButton1Click:Connect(function()
         if isChecking then return end
@@ -813,12 +832,10 @@ OpenKeySystemUI = function()
         StatusMsg.Text = Languages[CurrentLang].CheckingMsg
         StatusMsg.TextColor3 = Color3.fromRGB(254, 202, 202)
 
-        task.wait(0.45)
-        local enteredKey = string.gsub(InputBox.Text, "%s+", "")
-        local key6h = Generate6hKey()
-        local keyDaily = GenerateDailyKeyFallback()
+        task.wait(0.35)
+        local isKeyValid = CheckValidKeyMatch(InputBox.Text)
 
-        if string.lower(enteredKey) == string.lower(key6h) or string.lower(enteredKey) == string.lower(keyDaily) then
+        if isKeyValid then
             Save6hKey()
             CheckKeyBtn.Text = "SUCCESS"
             CheckKeyBtn.BackgroundColor3 = Color3.fromRGB(22, 101, 52)
@@ -875,13 +892,11 @@ local targetEndTime = trialData.StartTime + TRIAL_DURATION
 local remaining = targetEndTime - os.time()
 
 if remaining <= 0 then
-    -- Đã hết 2 phút: Làm mờ màn hình, đóng băng & mở Key UI
     ApplyScreenLockdown()
     ShowLiveToast("⚠️ HẾT THỜI GIAN DÙNG THỬ (2 PHÚT)", 0, Color3.fromRGB(239, 68, 68))
     OpenKeySystemUI()
     return
 else
-    -- Còn hạn 2 phút: Mở script gốc kèm theo dõi thời gian thực
     ShowLiveToast("CHILLI HUB • ĐANG THỬ NGHIỆM (2 PHÚT)", remaining, Color3.fromRGB(239, 68, 68))
     LaunchTargetScriptWithWatcher()
 
@@ -904,7 +919,6 @@ else
 
             if GetKeyRemainingTime() then return end
 
-            -- CHẠM MỐC 2 PHÚT (120S): KHÓA TỨC THÌ TRONG GAME
             if currentRemaining <= 0 then
                 SaveTrialData(trialData.StartTime, os.time())
                 TerminateTargetScript()

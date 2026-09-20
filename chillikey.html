@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chilli Hub - 6-Hour Key System</title>
+    <title>Chilli Hub - Key System 12H</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -19,68 +19,42 @@
         }
 
         body {
-            background-color: #080304;
+            background: radial-gradient(circle at 50% 30%, #2b080b 0%, #120304 60%, #080102 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 16px;
+            padding: 18px 12px;
             overflow-x: hidden;
-            position: relative;
-            background-image: 
-                radial-gradient(circle at 50% -10%, rgba(239, 68, 68, 0.28) 0%, transparent 60%),
-                radial-gradient(circle at 10% 90%, rgba(249, 115, 22, 0.18) 0%, transparent 50%),
-                radial-gradient(circle at 90% 80%, rgba(220, 38, 38, 0.2) 0%, transparent 50%);
         }
 
-        /* Hiệu ứng ánh lửa nền */
-        .ambient-glow {
-            position: fixed;
-            width: 360px;
-            height: 360px;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.3;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .glow-1 { top: -60px; left: -60px; background: #ef4444; }
-        .glow-2 { bottom: -60px; right: -60px; background: #f97316; }
-
-        /* Màn hình từ chối truy cập */
+        /* Màn hình từ chối khi vào thẳng không qua link rút gọn */
         .denied-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 390px;
             text-align: center;
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 20;
-            animation: fadeIn 0.4s ease-out;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .denied-title {
             color: #ef4444;
             font-size: 21px;
             font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 16px;
-            letter-spacing: -0.3px;
-            text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+            margin-bottom: 12px;
+            text-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
         }
 
         .denied-desc {
-            color: #a1a1aa;
+            color: #d6d3d1;
             font-size: 13.5px;
             line-height: 1.6;
-            margin-bottom: 20px;
-            font-weight: 500;
+            margin-bottom: 16px;
         }
 
         .denied-action {
@@ -90,17 +64,16 @@
             line-height: 1.6;
         }
 
-        /* Khung Card Chilli Hub */
+        /* Khung thẻ chính chuẩn màu cam lửa ảnh 5501 */
         .hub-card {
             width: 100%;
-            max-width: 416px;
-            background: linear-gradient(180deg, rgba(24, 10, 12, 0.96) 0%, rgba(12, 5, 6, 0.99) 100%);
-            border-radius: 28px;
-            padding: 24px 20px;
+            max-width: 390px;
+            background: linear-gradient(180deg, #d83d1c 0%, #b8260d 30%, #6a1005 100%);
+            border-radius: 32px;
+            padding: 24px 18px 20px 18px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 40px rgba(216, 61, 28, 0.3);
+            animation: cardEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             position: relative;
-            z-index: 10;
-            box-shadow: 0 25px 65px rgba(0, 0, 0, 0.95), 0 0 40px rgba(239, 68, 68, 0.22);
-            animation: cardEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes cardEntrance {
@@ -113,80 +86,47 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* Viền lửa chuyển động */
-        .hub-card::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            background: linear-gradient(135deg, #ef4444, #f97316, #b91c1c, #fdba74, #dc2626);
-            border-radius: 30px;
-            z-index: -1;
-            opacity: 0.9;
-            background-size: 300% 300%;
-            animation: gradientFire 5s ease infinite;
-        }
-
-        @keyframes gradientFire {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Logo Trái Ớt */
+        /* Logo Ớt Đỏ */
         .logo-wrapper {
             display: flex;
             justify-content: center;
             margin-bottom: 12px;
         }
         .logo-box {
-            width: 66px;
-            height: 66px;
-            background: linear-gradient(145deg, #2d0e12, #160608);
+            width: 68px;
+            height: 68px;
+            background: #180506;
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid rgba(249, 115, 22, 0.6);
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.5), inset 0 0 15px rgba(249, 115, 22, 0.3);
             font-size: 32px;
-            animation: floatIcon 3.5s ease-in-out infinite;
-        }
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
         }
 
-        /* Tiêu Đề */
+        /* Tiêu đề */
         .hub-header {
             text-align: center;
             margin-bottom: 18px;
         }
         .hub-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 25px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 24px;
             font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 0%, #fecaca 40%, #ef4444 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            color: #ffffff;
+            letter-spacing: -0.3px;
         }
         .hub-subtitle {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 12.5px;
-            color: #f97316;
-            margin-top: 3px;
+            font-size: 11.5px;
+            color: #fca5a5;
+            margin-top: 4px;
             font-weight: 600;
-            letter-spacing: 0.5px;
         }
 
-        /* Status Row */
+        /* Module 1: Trạng thái hệ thống */
         .status-row {
-            background: rgba(36, 14, 18, 0.7);
-            border: 1px solid rgba(239, 68, 68, 0.25);
+            background: rgba(26, 6, 8, 0.75);
             border-radius: 14px;
             padding: 10px 14px;
             display: flex;
@@ -195,17 +135,16 @@
             margin-bottom: 10px;
         }
         .status-label {
-            font-size: 12px;
-            color: #e4e4e7;
-            font-weight: 600;
+            font-size: 12.5px;
+            color: #f5f5f4;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 6px;
         }
         .status-badge {
-            background: rgba(239, 68, 68, 0.15);
+            background: rgba(45, 10, 14, 0.8);
             color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.45);
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 11px;
@@ -219,55 +158,47 @@
             height: 7px;
             background: #ef4444;
             border-radius: 50%;
-            box-shadow: 0 0 10px #ef4444;
-            animation: pulseDot 1.5s infinite;
-        }
-        @keyframes pulseDot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.75); }
+            box-shadow: 0 0 8px #ef4444;
         }
 
-        /* Grid 2 Cột */
+        /* Module 2: Chu kỳ & Đổi Key sau */
         .grid-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 14px;
         }
         .info-card {
-            background: rgba(36, 14, 18, 0.7);
-            border: 1px solid rgba(249, 115, 22, 0.25);
+            background: rgba(26, 6, 8, 0.75);
             border-radius: 14px;
-            padding: 10px 12px;
+            padding: 9px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-size: 12px;
         }
-        .info-card .label { color: #a1a1aa; font-weight: 600; }
-        .info-card .val { font-weight: 800; color: #fef2f2; }
-        .info-card .val.highlight {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+        .info-card .label { color: #f5f5f4; font-weight: 700; }
+        .info-card .pill-cycle {
+            background: #e11d48;
             color: #ffffff;
-            padding: 2px 7px;
-            border-radius: 6px;
+            padding: 3px 8px;
+            border-radius: 8px;
             font-size: 11px;
             font-weight: 800;
         }
-        .info-card .countdown-val {
-            color: #f97316;
+        .info-card .val-time {
             font-family: 'JetBrains Mono', monospace;
             font-weight: 800;
+            color: #f97316;
+            font-size: 12px;
         }
 
-        /* Khung Hiển Thị Key */
+        /* Module 3: Khung chứa Key */
         .key-section {
-            background: rgba(26, 10, 13, 0.88);
-            border: 1px solid rgba(249, 115, 22, 0.35);
+            background: rgba(26, 6, 8, 0.85);
             border-radius: 18px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+            padding: 14px;
+            margin-bottom: 14px;
         }
         .key-header {
             display: flex;
@@ -278,85 +209,69 @@
         .key-title {
             font-size: 12px;
             font-weight: 800;
-            color: #fecaca;
-            letter-spacing: 0.5px;
+            color: #ffffff;
+            letter-spacing: 0.3px;
         }
         .key-badge-status {
             font-size: 10.5px;
             font-weight: 700;
             padding: 3px 8px;
             border-radius: 6px;
-            background: rgba(161, 161, 170, 0.15);
-            color: #a1a1aa;
-            border: 1px solid rgba(161, 161, 170, 0.3);
-            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            color: #d6d3d1;
         }
         .key-badge-status.active {
-            background: rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.25);
             color: #fca5a5;
-            border-color: rgba(239, 68, 68, 0.5);
         }
 
         .key-display-box {
-            background: #0d0405;
-            border: 1.5px solid #2e1014;
+            background: #100304;
+            border: 1.5px solid #33080b;
             border-radius: 12px;
-            padding: 12px 14px;
+            padding: 12px;
             text-align: center;
             margin-bottom: 12px;
-            transition: all 0.35s ease;
-        }
-        .key-display-box.unlocked {
-            border-color: #ef4444;
-            background: #1f070a;
-            box-shadow: 0 0 25px rgba(239, 68, 68, 0.35);
         }
         .key-text {
             font-family: 'JetBrains Mono', monospace;
             font-size: 13.5px;
             font-weight: 800;
-            color: #71717a;
-            letter-spacing: 1px;
-            transition: all 0.3s;
+            color: #ffffff;
+            letter-spacing: 0.5px;
             word-break: break-all;
         }
-        .key-text.unlocked {
-            color: #fee2e2;
-            text-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
-        }
 
-        /* Nút Bấm Lửa Rực Cháy */
+        /* Nút màu cam lửa gradient */
         .btn-action {
             width: 100%;
-            height: 46px;
+            height: 44px;
             border: none;
             border-radius: 12px;
             font-size: 12.5px;
-            font-weight: 900;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            background: linear-gradient(90deg, #f97316 0%, #ef4444 50%, #dc2626 100%);
+            background: linear-gradient(90deg, #ff5722 0%, #f43f1d 100%);
             color: #ffffff;
-            box-shadow: 0 4px 18px rgba(239, 68, 68, 0.45);
+            box-shadow: 0 4px 14px rgba(244, 63, 29, 0.4);
+            transition: transform 0.1s, opacity 0.2s;
         }
-        .btn-action:active { transform: scale(0.97); }
+        .btn-action:active { transform: scale(0.98); }
         .btn-action.copied {
-            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-            color: #ffffff;
-            box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45);
+            background: #10b981;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
         }
 
-        /* Khung Script */
+        /* Module 4: Khung Script */
         .script-section {
-            background: rgba(26, 10, 13, 0.88);
-            border: 1px solid rgba(239, 68, 68, 0.25);
+            background: rgba(26, 6, 8, 0.85);
             border-radius: 18px;
-            padding: 14px 16px;
-            margin-bottom: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
         }
         .script-header {
             display: flex;
@@ -367,118 +282,102 @@
         .script-title {
             font-size: 11.5px;
             font-weight: 800;
-            color: #fca5a5;
+            color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
         .btn-copy-script {
             background: none;
             border: none;
-            color: #f97316;
+            color: #fb923c;
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            text-decoration: underline;
-            padding: 2px 4px;
-            transition: color 0.2s;
         }
-        .btn-copy-script:hover { color: #fed7aa; }
 
         .script-code-box {
-            background: #0d0405;
-            border: 1px solid #2e1014;
+            background: #100304;
+            border: 1px solid #33080b;
             border-radius: 10px;
-            padding: 10px 12px;
+            padding: 10px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: #f4f4f5;
+            font-size: 9.5px;
+            color: #fed7aa;
             line-height: 1.45;
             word-break: break-all;
-            user-select: all;
         }
-        .script-code-box .keyword { color: #f43f5e; }
-        .script-code-box .string { color: #f97316; }
 
         /* SFX Row */
         .sfx-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 4px 4px 12px 4px;
+            padding: 2px 4px 8px 4px;
         }
         .sfx-label {
-            font-size: 11.5px;
-            color: #a1a1aa;
+            font-size: 11px;
+            color: #fecdd3;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
-        .sfx-toggle-btn {
-            background: rgba(36, 14, 18, 0.8);
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            color: #f4f4f5;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
+        .sfx-btn {
+            background: rgba(26, 6, 8, 0.7);
+            border: none;
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 14px;
+            font-size: 10.5px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 5px;
-            transition: all 0.2s;
-        }
-        .sfx-toggle-btn.active {
-            border-color: #ef4444;
-            color: #fca5a5;
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+            gap: 4px;
         }
 
         .footer-note {
             text-align: center;
-            font-size: 11px;
-            color: #71717a;
-            font-weight: 600;
+            font-size: 10.5px;
+            color: #fca5a5;
+            opacity: 0.85;
+            font-weight: 500;
+            margin-top: 4px;
         }
 
-        /* Toast Thông Báo */
-        .toast-notification {
+        /* Toast Popup */
+        .toast {
             position: fixed;
-            bottom: -90px;
+            bottom: -80px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #240b0e, #130406);
-            border: 1.5px solid #ef4444;
+            background: #1c0507;
+            border: 1px solid #ef4444;
             color: #ffffff;
-            padding: 12px 22px;
-            border-radius: 30px;
-            font-size: 12px;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 11.5px;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 10px 35px rgba(239, 68, 68, 0.45);
-            z-index: 100;
-            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             pointer-events: none;
             white-space: nowrap;
+            z-index: 99;
         }
-        .toast-notification.show { bottom: 24px; }
+        .toast.show { bottom: 20px; }
     </style>
-</head><body>
+</head>
+<body>
 
-    <div class="ambient-glow glow-1"></div>
-    <div class="ambient-glow glow-2"></div>
-
-    <!-- MÀN HÌNH TỪ CHỐI TRUY CẬP (Khi reload hoặc vào từ lịch sử) -->
+    <!-- MÀN HÌNH TỪ CHỐI TRUY CẬP (Nếu không có tham số ?pass=) -->
     <div class="denied-container" id="accessDeniedScreen" style="display: none;">
         <h1 class="denied-title">⚠️ TRUY CẬP BỊ TỪ CHỐI</h1>
-        <p class="denied-desc">Liên kết đã hết hạn hoặc bạn đang vào từ Lịch sử / Bookmark.</p>
-        <p class="denied-action">Vui lòng mở lại Roblox Script và bấm "LẤY KEY NGAY" để vượt link!</p>
+        <p class="denied-desc">Liên kết đã hết hạn hoặc bạn đang truy cập từ Lịch sử / Bookmark.</p>
+        <p class="denied-action">Vui lòng mở lại Roblox Script và bấm "LẤY KEY" để vượt link!</p>
     </div>
 
-    <!-- GIAO DIỆN CHÍNH CHILLI HUB -->
+    <!-- KHUNG THẺ GIAO DIỆN CHUẨN ẢNH 5501 (CHILLI HUB 12H) -->
     <div class="hub-card" id="mainHubScreen" style="display: none;">
         <div class="logo-wrapper">
             <div class="logo-box">🌶️</div>
@@ -500,297 +399,221 @@
         <div class="grid-info">
             <div class="info-card">
                 <span class="label">Chu kỳ:</span>
-                <span class="val highlight">6 Tiếng / Lần</span>
+                <span class="pill-cycle">12 Tiếng / Lần</span>
             </div>
             <div class="info-card">
                 <span class="label">Đổi Key sau:</span>
-                <span class="countdown-val" id="resetCountdown">--:--:--</span>
+                <span class="val-time" id="countdownTimer">--:--:--</span>
             </div>
         </div>
 
         <div class="key-section">
             <div class="key-header">
                 <span class="key-title">MÃ KEY PHIÊN NÀY:</span>
-                <span class="key-badge-status" id="keyBadgeStatus">Chưa nhận</span>
+                <span class="key-badge-status" id="keyBadge">Chưa nhận</span>
             </div>
 
-            <div class="key-display-box" id="keyDisplayBox">
-                <div class="key-text" id="keyText">•••••••••••••••••••••••••••••</div>
+            <div class="key-display-box">
+                <div class="key-text" id="keyDisplay">•••••••••••••••••••••••••••••</div>
             </div>
 
             <button class="btn-action" id="btnAction" onclick="handleKeyAction()">
-                <span id="btnIcon">🔥</span>
-                <span id="btnText">NHẬN KEY NGAY</span>
+                <span id="btnIcon">📋</span>
+                <span id="btnText">NHẬN KEY 12 TIẾNG</span>
             </button>
         </div>
 
         <div class="script-section">
             <div class="script-header">
                 <span class="script-title">⚡ SCRIPT CHILLI HUB</span>
-                <button class="btn-copy-script" onclick="copyScriptCode()">Sao chép Loader</button>
+                <button class="btn-copy-script" onclick="copyScriptLoader()">Sao chép Loader</button>
             </div>
-            <div class="script-code-box" id="scriptCode">
-                <span class="keyword">loadstring</span>(game:HttpGet(<span class="string">'https://raw.githubusercontent.com/chillihihi1/script/refs/heads/main/loader.lua'</span>))()
+            <div class="script-code-box">
+                loadstring(game:HttpGet('https://raw.githubusercontent.com/chillihihi1/script/refs/heads/main/loader.lua'))()
             </div>
         </div>
 
         <div class="sfx-row">
             <div class="sfx-label">🔔 Hiệu ứng âm thanh SFX:</div>
-            <button class="sfx-toggle-btn active" id="sfxToggle" onclick="toggleSFX()">
-                <span id="sfxState">Bật 🟢</span>
+            <button class="sfx-btn" id="sfxBtn" onclick="toggleSFX()">
+                <span id="sfxStatus">Bật 🟢</span>
             </button>
         </div>
 
         <div class="footer-note">
-            Key tự động đổi mới sau mỗi 6 tiếng (00h, 06h, 12h, 18h GMT+7)!
+            Key tự động đổi mới sau mỗi 12 tiếng (00h, 12h GMT+7)!
         </div>
     </div>
 
-    <!-- Toast Thông Báo Nổi -->
-    <div class="toast-notification" id="toast">
-        <span id="toastIcon">🌶️</span>
-        <span id="toastMsg">Đã tạo thành công Key Chilli Hub!</span>
-    </div><script>
+    <!-- Toast Thông Báo Nhỏ Gọn -->
+    <div class="toast" id="toast">Đã sao chép mã Key vào bộ nhớ tạm!</div>
+        <script>
         // =========================================================================
-        //  1. CƠ CHẾ KIỂM TRA MẬT KHẨU & CHỐNG LƯU LỊCH SỬ TRÌNH DUYỆT
+        //  1. KIỂM TRA MẬT KHẨU & TỰ XÓA URL PARAM CHỐNG F5
         // =========================================================================
-        const VALID_PASSWORDS = ["chilli2026", "chillikey", "omg2026", "ronnei2026"];
+        const VALID_PASSWORDS = ["chilli2026", "chillikey", "chillikey12h", "ronnei2026", "omg2026"];
         const urlParams = new URLSearchParams(window.location.search);
         const pass = urlParams.get('pass');
 
-        // Dọn dẹp cache cũ
-        localStorage.removeItem("ChilliHub_Pass_Used");
-        localStorage.removeItem("NasiRendang_Pass_Used");
-
         if (pass && VALID_PASSWORDS.includes(pass)) {
-            // HỢP LỆ: Vừa vượt link thành công
             document.getElementById('mainHubScreen').style.display = 'block';
             document.getElementById('accessDeniedScreen').style.display = 'none';
-
-            // Xóa ngay ?pass=... khỏi thanh URL để không bị lưu vào bookmark/history
+            // Xóa tham số khỏi thanh địa chỉ tránh lưu lại vào lịch sử
             window.history.replaceState({}, document.title, window.location.pathname);
         } else {
-            // KHÔNG HỢP LỆ: F5 hoặc mở lại từ lịch sử
             document.getElementById('accessDeniedScreen').style.display = 'flex';
             document.getElementById('mainHubScreen').style.display = 'none';
         }
 
         // =========================================================================
-        //  2. HIỆU ỨNG ÂM THANH SFX (WEB AUDIO API)
+        //  2. ÂM THANH SFX (WEB AUDIO API KHÔNG CẦN TẢI FILE NGOÀI)
         // =========================================================================
+        let isAudioEnabled = true;
         let isKeyUnlocked = false;
         let generatedKey = "";
-        let isSfxEnabled = true;
 
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
 
-        function initAudio() {
-            if (!audioCtx) audioCtx = new AudioContext();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        }
-
-        function playSound(type) {
-            if (!isSfxEnabled) return;
+        function playSound(frequency, duration, type = 'sine') {
+            if (!isAudioEnabled) return;
             try {
-                initAudio();
+                if (!audioCtx) audioCtx = new AudioContext();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + duration);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-
-                const now = audioCtx.currentTime;
-
-                if (type === 'click') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(650, now);
-                    osc.frequency.exponentialRampToValueAtTime(250, now + 0.08);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.linearRampToValueAtTime(0, now + 0.08);
-                    osc.start(now);
-                    osc.stop(now + 0.08);
-                } else if (type === 'generate') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(250, now);
-                    osc.frequency.linearRampToValueAtTime(900, now + 0.25);
-                    gain.gain.setValueAtTime(0.18, now);
-                    gain.gain.linearRampToValueAtTime(0, now + 0.25);
-                    osc.start(now);
-                    osc.stop(now + 0.25);
-                } else if (type === 'success') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(523.25, now); // C5
-                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
-                    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
-                    osc.frequency.setValueAtTime(1046.50, now + 0.24); // C6
-                    gain.gain.setValueAtTime(0.22, now);
-                    gain.gain.linearRampToValueAtTime(0, now + 0.38);
-                    osc.start(now);
-                    osc.stop(now + 0.38);
-                }
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
             } catch (e) {}
         }
 
         function toggleSFX() {
-            isSfxEnabled = !isSfxEnabled;
-            const btn = document.getElementById('sfxToggle');
-            const txt = document.getElementById('sfxState');
-            if (isSfxEnabled) {
-                btn.classList.add('active');
-                txt.innerText = "Bật 🟢";
-                playSound('click');
+            isAudioEnabled = !isAudioEnabled;
+            const status = document.getElementById('sfxStatus');
+            if (isAudioEnabled) {
+                status.innerText = "Bật 🟢";
+                playSound(600, 0.08);
             } else {
-                btn.classList.remove('active');
-                txt.innerText = "Tắt 🔴";
+                status.innerText = "Tắt 🔴";
             }
         }
 
         // =========================================================================
-        //  3. THUẬT TOÁN ĐỔI KEY 6 TIẾNG / LẦN (GMT+7)
-        //  Khung giờ: 00:00-06:00 | 06:00-12:00 | 12:00-18:00 | 18:00-24:00
+        //  3. THUẬT TOÁN ĐỔI KEY 12 TIẾNG THEO GIỜ GMT+7
         // =========================================================================
-        function getVietnamDate() {
+        function getVietnamTime() {
             const now = new Date();
             const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-            return new Date(utc + (3600000 * 7));
+            return new Date(utc + (7 * 3600000));
         }
 
-        function calculate6HourKey() {
-            const vnDate = getVietnamDate();
-            const day = vnDate.getDate();
-            const month = vnDate.getMonth() + 1;
-            const year = vnDate.getFullYear();
-            
-            // slot = 0, 1, 2, 3 tương ứng 4 khung giờ trong ngày
-            const slot = Math.floor(vnDate.getHours() / 6);
+        function calculate12hKey() {
+            const vn = getVietnamTime();
+            const day = vn.getDate();
+            const month = vn.getMonth() + 1;
+            const year = vn.getFullYear();
+            const slot = Math.floor(vn.getHours() / 12); // 0 (00:00 - 11:59) hoặc 1 (12:00 - 23:59)
 
-            const val1 = (day * 3719 + month * 1823 + year * 83 + slot * 4129) % 65535;
-            const val2 = (day * 5923 + month * 4789 + year * 197 + slot * 7351) % 65535;
-            const val3 = (day * 7121 + month * 6211 + year * 263 + slot * 3389) % 65535;
+            const v1 = (day * 3141 + month * 2718 + year * 137 + slot * 4099) % 65535;
+            const v2 = (day * 5821 + month * 4111 + year * 251 + slot * 6173) % 65535;
+            const v3 = (day * 7333 + month * 6177 + year * 389 + slot * 8209) % 65535;
 
-            const hex1 = val1.toString(16).toUpperCase().padStart(4, '0');
-            const hex2 = val2.toString(16).toUpperCase().padStart(4, '0');
-            const hex3 = val3.toString(16).toUpperCase().padStart(4, '0');
+            const h1 = v1.toString(16).toUpperCase().padStart(4, '0');
+            const h2 = v2.toString(16).toUpperCase().padStart(4, '0');
+            const h3 = v3.toString(16).toUpperCase().padStart(4, '0');
 
-            return `chillikey6h-${hex1}-${hex2}-${hex3}`;
+            return `chillikey12h-${h1}-${h2}-${h3}`;
         }
 
-        // Đếm ngược đến mốc 6 tiếng tiếp theo
-        function updateResetCountdown() {
-            const vnDate = getVietnamDate();
-            const hours = vnDate.getHours();
-            const currentSlot = Math.floor(hours / 6);
-            const nextSlotHour = (currentSlot + 1) * 6;
+        // Đồng hồ đếm lùi nhảy số từng giây đến mốc 12h tiếp theo (00:00 hoặc 12:00)
+        function updateCountdown() {
+            const vn = getVietnamTime();
+            const h = vn.getHours();
+            const m = vn.getMinutes();
+            const s = vn.getSeconds();
 
-            const nextReset = new Date(vnDate);
-            if (nextSlotHour === 24) {
-                nextReset.setDate(nextReset.getDate() + 1);
-                nextReset.setHours(0, 0, 0, 0);
-            } else {
-                nextReset.setHours(nextSlotHour, 0, 0, 0);
-            }
+            let targetHour = h < 12 ? 12 : 24;
+            let remainingSec = (targetHour * 3600) - (h * 3600 + m * 60 + s);
 
-            let diffMs = nextReset.getTime() - vnDate.getTime();
-            if (diffMs < 0) diffMs = 0;
+            const hoursLeft = Math.floor(remainingSec / 3600).toString().padStart(2, '0');
+            const minsLeft = Math.floor((remainingSec % 3600) / 60).toString().padStart(2, '0');
+            const secsLeft = (remainingSec % 60).toString().padStart(2, '0');
 
-            const h = Math.floor(diffMs / 3600000);
-            const m = Math.floor((diffMs % 3600000) / 60000);
-            const s = Math.floor((diffMs % 60000) / 1000);
-
-            const cdElem = document.getElementById('resetCountdown');
-            if (cdElem) {
-                cdElem.innerText = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            const timerEl = document.getElementById('countdownTimer');
+            if (timerEl) {
+                timerEl.innerText = `${hoursLeft}:${minsLeft}:${secsLeft}`;
             }
         }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
 
-        setInterval(updateResetCountdown, 1000);
-        updateResetCountdown();
-
-        function copyToClipboard(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                return navigator.clipboard.writeText(text).catch(() => fallbackCopyText(text));
-            } else {
-                fallbackCopyText(text);
-                return Promise.resolve();
-            }
+        // Toast thông báo
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
         }
 
-        function fallbackCopyText(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-999999px";
-            textArea.style.top = "-999999px";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try { document.execCommand('copy'); } catch (err) {}
-            document.body.removeChild(textArea);
-        }
-
-        function showToast(msg, icon = '🌶️') {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = msg;
-            document.getElementById('toastIcon').innerText = icon;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
+        // Bấm nút nhận Key / Sao chép Key
         function handleKeyAction() {
             const btn = document.getElementById('btnAction');
-            const btnIcon = document.getElementById('btnIcon');
             const btnText = document.getElementById('btnText');
-            const keyText = document.getElementById('keyText');
-            const keyDisplayBox = document.getElementById('keyDisplayBox');
-            const badge = document.getElementById('keyBadgeStatus');
+            const keyDisplay = document.getElementById('keyDisplay');
+            const keyBadge = document.getElementById('keyBadge');
 
             if (!isKeyUnlocked) {
-                playSound('generate');
-                btn.style.pointerEvents = 'none';
-                btnText.innerText = "ĐANG TẠO KEY...";
-                btnIcon.innerText = "⏳";
+                playSound(450, 0.15, 'sawtooth');
+                generatedKey = calculate12hKey();
+                isKeyUnlocked = true;
 
-                setTimeout(() => {
-                    generatedKey = calculate6HourKey();
-                    isKeyUnlocked = true;
+                keyDisplay.innerText = generatedKey;
+                keyBadge.innerText = "Đã lấy ✓";
+                keyBadge.classList.add('active');
 
-                    keyText.innerText = generatedKey;
-                    keyText.classList.add('unlocked');
-                    keyDisplayBox.classList.add('unlocked');
-
-                    badge.innerText = "Đã lấy ✓";
-                    badge.classList.add('active');
-
-                    btnIcon.innerText = "📋";
-                    btnText.innerText = "SAO CHÉP MÃ KEY";
-                    btn.style.pointerEvents = 'auto';
-
-                    playSound('success');
-                    showToast("Đã cấp mã Key Chilli Hub thành công!", "🌶️");
-                }, 450);
+                btnText.innerText = "SAO CHÉP MÃ KEY";
+                showToast("Đã cấp mã Key 12 tiếng phiên này!");
             } else {
-                playSound('click');
-                copyToClipboard(generatedKey);
-                playSound('success');
+                playSound(880, 0.1, 'sine');
+                navigator.clipboard.writeText(generatedKey).catch(() => {
+                    const el = document.createElement("textarea");
+                    el.value = generatedKey;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                });
+
                 btn.classList.add('copied');
-                btnIcon.innerText = "✔";
                 btnText.innerText = "ĐÃ SAO CHÉP MÃ KEY!";
-                showToast("Đã sao chép mã Key vào bộ nhớ tạm!", "📋");
+                showToast("Đã sao chép mã Key vào bộ nhớ tạm!");
 
                 setTimeout(() => {
                     btn.classList.remove('copied');
-                    btnIcon.innerText = "📋";
                     btnText.innerText = "SAO CHÉP MÃ KEY";
-                }, 2500);
+                }, 2000);
             }
         }
 
-        function copyScriptCode() {
-            playSound('click');
-            const rawScript = "loadstring(game:HttpGet('https://raw.githubusercontent.com/chillihihi1/script/refs/heads/main/loader.lua'))()";
-            copyToClipboard(rawScript);
-            playSound('success');
-            showToast("Đã sao chép Script Loader thành công!", "⚡");
+        // Sao chép Loader
+        function copyScriptLoader() {
+            playSound(700, 0.08, 'sine');
+            const loaderCode = "loadstring(game:HttpGet('https://raw.githubusercontent.com/chillihihi1/script/refs/heads/main/loader.lua'))()";
+            navigator.clipboard.writeText(loaderCode).catch(() => {
+                const el = document.createElement("textarea");
+                el.value = loaderCode;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            });
+            showToast("Đã sao chép Script Loader!");
         }
     </script>
 </body>

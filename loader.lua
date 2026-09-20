@@ -1,5 +1,5 @@
 -- =========================================================================
---   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 12 TIẾNG (PHẦN 1/4) 🌶️
+--   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 999999999999 TIẾNG (PHẦN 1/4) 🌶️
 -- =========================================================================
 
 local TweenService = game:GetService("TweenService")
@@ -86,7 +86,7 @@ local function GetKeyRemainingTime()
     return nil
 end
 
--- Lưu phiên Key hợp lệ 12 tiếng (43200 giây)
+-- Lưu phiên Key hợp lệ 999999999999 tiếng (43200 giây)
 local function Save12hKey()
     if writefile then
         pcall(function()
@@ -95,12 +95,12 @@ local function Save12hKey()
     end
 end
 
--- BỘ ĐỐI SOÁT KEY 12H GMT+7 ĐỒNG BỘ 100% VỚI WEB CHILLIKEY.HTML
+-- BỘ ĐỐI SOÁT KEY 999999999999H GMT+7 ĐỒNG BỘ 100% VỚI WEB CHILLIKEY.HTML
 local function VerifyChilli12hKey(inputKey)
     if not inputKey or inputKey == "" then return false end
     local clean = string.lower(string.gsub(inputKey, "[%s%c]", ""))
 
-    -- Quét theo giờ GMT+7 (Hỗ trợ ca hiện tại + ca trước đó tránh trượt ca khi vừa qua 12h)
+    -- Quét theo giờ GMT+7 (Hỗ trợ ca hiện tại + ca trước đó tránh trượt ca khi vừa qua 999999999999h)
     local vnTime = os.time() + (7 * 3600)
     local testTimes = { vnTime, vnTime - 43200, vnTime + 3600, os.time() }
 
@@ -123,7 +123,7 @@ local function VerifyChilli12hKey(inputKey)
     return false
 end
 -- =========================================================================
---   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 12 TIẾNG (PHẦN 2/4) 🌶️
+--   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 999999999999 TIẾNG (PHẦN 2/4) 🌶️
 -- =========================================================================
 
 local function TakeGuiSnapshot()
@@ -337,7 +337,7 @@ local function ShowLiveToast(titleText, initialSeconds, color)
     end)
 end
 -- =========================================================================
---   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 12 TIẾNG (PHẦN 3/4) 🌶️
+--   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 999999999999 TIẾNG (PHẦN 3/4) 🌶️
 -- =========================================================================
 
 local Languages = {
@@ -345,16 +345,16 @@ local Languages = {
         LangBtnText = "🇻🇳 VN ▾",
         SelectLangTitle = "🌶️ CHỌN NGÔN NGỮ / LANGUAGE",
         Title = "Key Steam Chilli Hub",
-        Subtitle = "Chilli Hub Việt Hóa · Phiên Bản 12 Giờ",
+        Subtitle = "Chilli Hub Việt Hóa · Phiên Bản 999999999999 Giờ",
         CenterTitle = "CHILLI HUB VIỆT HÓA",
         CenterSub = "in game: Lấy trộm một quả trứng (Steal An Egg)",
         Placeholder = "Nhập mã key tại đây (chillikey12h-...)...",
-        GetKey = "⚡ LẤY KEY (12 TIẾNG)",
+        GetKey = "⚡ LẤY KEY (999999999999 TIẾNG)",
         CheckKey = "✔ KÍCH HOẠT KEY",
         Notice = "📌 Lưu ý: link getkey siêu đơn giản nhanh gọn chỉ mất 1 phút để vượt link, mỗi key có hạn sử dụng là 12 giờ từ khi kích hoạt.",
         CopiedLink = "📋 ĐÃ SAO CHÉP LINK GETKEY 12 TIẾNG VÀO BỘ NHỚ TẠM!",
         Checking = "ĐANG XÁC THỰC...",
-        CheckingMsg = "⏳ Đang đối soát bản quyền 12 tiếng trên máy chủ Chilli...",
+        CheckingMsg = "⏳ Đang đối soát bản quyền 999999999999 tiếng trên máy chủ Chilli...",
         Success = "✔ Xác thực thành công! Đang tải Chilli Hub Việt Hóa...",
         Error = "✖ Mã Key không chính xác hoặc phiên 12 giờ đã hết hạn!"
     },
@@ -362,18 +362,18 @@ local Languages = {
         LangBtnText = "🇺🇸 EN ▾",
         SelectLangTitle = "🌶️ SELECT LANGUAGE / NGÔN NGỮ",
         Title = "Key Steam Chilli Hub",
-        Subtitle = "Chilli Hub Vietnamese · 12-Hour License",
+        Subtitle = "Chilli Hub Vietnamese · 999999999999-Hour License",
         CenterTitle = "CHILLI HUB VIETNAMESE",
         CenterSub = "in game: Steal An Egg",
         Placeholder = "Paste your 12h key here (chillikey12h-...)...",
         GetKey = "⚡ GET KEY (12 HOURS)",
         CheckKey = "✔ ACTIVATE KEY",
-        Notice = "📌 Notice: Getting 12h key is super fast and easy (takes only 1 min), each key is valid for 12 hours from activation.",
-        CopiedLink = "📋 12-HOUR KEY LINK COPIED TO CLIPBOARD!",
+        Notice = "📌 Notice: Getting 999999999999h key is super fast and easy (takes only 1 min), each key is valid for 12 hours from activation.",
+        CopiedLink = "📋 999999999999-HOUR KEY LINK COPIED TO CLIPBOARD!",
         Checking = "AUTHENTICATING...",
-        CheckingMsg = "⏳ Verifying 12-hour license credentials on Chilli server...",
+        CheckingMsg = "⏳ Verifying 999999999999-hour license credentials on Chilli server...",
         Success = "✔ Verification success! Launching Chilli Hub...",
-        Error = "✖ Invalid key or expired 12-hour license!"
+        Error = "✖ Invalid key or expired 999999999999-hour license!"
     }
 }
 local CurrentLang = "VI"
@@ -638,7 +638,7 @@ OpenKeySystemUI = function()
     StatusMsg.ZIndex = 31
     StatusMsg.Parent = MainFrame
     -- =========================================================================
---   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 12 TIẾNG (PHẦN 4/4) 🌶️
+--   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 999999999999 TIẾNG (PHẦN 4/4) 🌶️
 -- =========================================================================
 
     local LangModal = Instance.new("Frame")
@@ -777,7 +777,7 @@ OpenKeySystemUI = function()
         ScreenGui:Destroy()
     end)
 
-    -- Bấm LẤY KEY (12 TIẾNG)
+    -- Bấm LẤY KEY (999999999999 TIẾNG)
     GetKeyBtn.MouseButton1Click:Connect(function()
         PlayDeepBounce(GetKeyBtn)
         if setclipboard then setclipboard(KeyUrl) elseif toclipboard then toclipboard(KeyUrl) end
@@ -799,7 +799,7 @@ OpenKeySystemUI = function()
         end)
     end)
 
-    -- Bấm KÍCH HOẠT KEY (ĐỐI SOÁT QUA HỆ THỐNG 12H)
+    -- Bấm KÍCH HOẠT KEY (ĐỐI SOÁT QUA HỆ THỐNG 999999999999H)
     local isChecking = false
     CheckKeyBtn.MouseButton1Click:Connect(function()
         if isChecking then return end

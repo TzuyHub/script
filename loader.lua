@@ -1,5 +1,5 @@
 -- =========================================================================
---   🌶️ CHILLI HUB LOADER - BẢN FIX ĐỒNG BỘ MULTI-SLOT 6H (PHẦN 1/4) 🌶️
+--   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 12 TIẾNG (PHẦN 1/4) 🌶️
 -- =========================================================================
 
 local TweenService = game:GetService("TweenService")
@@ -15,7 +15,7 @@ local TargetScriptUrl = "https://raw.githubusercontent.com/robvxs24/freemium/ref
 
 local KeyFileName = "ChilliHub_KeyData.json"
 local TrialFileName = "ChilliHub_TrialData.json"
-local TRIAL_DURATION = 120 -- Thử nghiệm 2 phút = 120 giây
+local TRIAL_DURATION = 120 -- Dùng thử đúng 2 phút = 120 giây
 
 local InitialGuis = {}
 local ScriptConnections = {}
@@ -23,7 +23,7 @@ local ActiveBlurEffect = nil
 local InputBlockerScreen = nil
 local OpenKeySystemUI = nil
 
--- MODULE MÃ HÓA BẢO MẬT HEX-XOR
+-- MODULE MÃ HÓA LƯU TRỮ TRÁNH SỬA FILE
 local CIPHER_KEY = 93
 
 local function EncryptData(str)
@@ -86,63 +86,44 @@ local function GetKeyRemainingTime()
     return nil
 end
 
-local function Save6hKey()
+-- Lưu phiên Key hợp lệ 12 tiếng (43200 giây)
+local function Save12hKey()
     if writefile then
         pcall(function()
-            writefile(KeyFileName, HttpService:JSONEncode({ ExpireTimestamp = os.time() + 21600 }))
+            writefile(KeyFileName, HttpService:JSONEncode({ ExpireTimestamp = os.time() + 43200 }))
         end)
     end
 end
 
--- BỘ GIẢI MÃ ĐA CA ĐỐI SOÁT TOÀN DIỆN (CHỐNG LỆCH GIỜ EXECUTOR VÀ WEB)
-local function CheckValidKeyMatch(inputKey)
+-- BỘ ĐỐI SOÁT KEY 12H GMT+7 ĐỒNG BỘ 100% VỚI WEB CHILLIKEY.HTML
+local function VerifyChilli12hKey(inputKey)
     if not inputKey or inputKey == "" then return false end
     local clean = string.lower(string.gsub(inputKey, "[%s%c]", ""))
 
-    -- 1. Khớp thẳng mã hiện tại trên web
-    if clean == "chillikey6h-f384-8e33-2820" then
-        return true
-    end
+    -- Quét theo giờ GMT+7 (Hỗ trợ ca hiện tại + ca trước đó tránh trượt ca khi vừa qua 12h)
+    local vnTime = os.time() + (7 * 3600)
+    local testTimes = { vnTime, vnTime - 43200, vnTime + 3600, os.time() }
 
-    -- 2. Quét toàn bộ các ca giờ (0h, 6h, 12h, 18h) theo cả UTC và GMT+7
-    local timePoints = {
-        os.time(),
-        os.time() + (7 * 3600),
-        os.time() - (7 * 3600),
-        os.time() - 21600,
-        os.time() + 21600
-    }
+    for _, t in ipairs(testTimes) do
+        local d = os.date("!*t", t)
+        local slot = math.floor(d.hour / 12) -- Slot 0: 00:00-11:59 | Slot 1: 12:00-23:59
 
-    for _, t in ipairs(timePoints) do
-        for _, isUTC in ipairs({ true, false }) do
-            local d = isUTC and os.date("!*t", t) or os.date("*t", t)
-            if d and d.day and d.month and d.year then
-                -- Quét qua cả 4 slot ca 6 tiếng
-                for slot = 0, 3 do
-                    local s1 = (d.day * 5147 + d.month * 3229 + d.year * 97 + slot * 1337) % 65535
-                    local s2 = (d.day * 7187 + d.month * 6421 + d.year * 211 + slot * 2441) % 65535
-                    local s3 = (d.day * 4397 + d.month * 4831 + d.year * 337 + slot * 3559) % 65535
-                    local genSlotKey = string.format("chillikey6h-%04x-%04x-%04x", s1, s2, s3)
-                    if clean == genSlotKey then
-                        return true
-                    end
-                end
+        local v1 = (d.day * 3141 + d.month * 2718 + d.year * 137 + slot * 4099) % 65535
+        local v2 = (d.day * 5821 + d.month * 4111 + d.year * 251 + slot * 6173) % 65535
+        local v3 = (d.day * 7333 + d.month * 6177 + d.year * 389 + slot * 8209) % 65535
 
-                -- Quét qua mã dạng Daily
-                local v1 = (d.day * 5147 + d.month * 3229 + d.year * 97) % 65535
-                local v2 = (d.day * 7187 + d.month * 6421 + d.year * 211) % 65535
-                local v3 = (d.day * 4397 + d.month * 4831 + d.year * 337) % 65535
-                local genDailyKey = string.format("chillikey6h-%04x-%04x-%04x", v1, v2, v3)
-                if clean == genDailyKey then
-                    return true
-                end
-            end
+        local fullKey = string.format("chillikey12h-%04x-%04x-%04x", v1, v2, v3)
+        local shortKey = string.format("%04x-%04x-%04x", v1, v2, v3)
+
+        if clean == fullKey or clean == shortKey then
+            return true
         end
     end
 
     return false
-end-- =========================================================================
---   🌶️ CHILLI HUB LOADER - BẢN FIX ĐỒNG BỘ MULTI-SLOT 6H (PHẦN 2/4) 🌶️
+end
+-- =========================================================================
+--   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 12 TIẾNG (PHẦN 2/4) 🌶️
 -- =========================================================================
 
 local function TakeGuiSnapshot()
@@ -354,8 +335,9 @@ local function ShowLiveToast(titleText, initialSeconds, color)
             end)
         end
     end)
-end-- =========================================================================
---   🌶️ CHILLI HUB LOADER - BẢN FIX ĐỒNG BỘ MULTI-SLOT 6H (PHẦN 3/4) 🌶️
+end
+-- =========================================================================
+--   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 12 TIẾNG (PHẦN 3/4) 🌶️
 -- =========================================================================
 
 local Languages = {
@@ -363,35 +345,35 @@ local Languages = {
         LangBtnText = "🇻🇳 VN ▾",
         SelectLangTitle = "🌶️ CHỌN NGÔN NGỮ / LANGUAGE",
         Title = "Key Steam Chilli Hub",
-        Subtitle = "Chilli Hub Việt Hóa · Phiên Bản 6 Giờ",
+        Subtitle = "Chilli Hub Việt Hóa · Phiên Bản 12 Giờ",
         CenterTitle = "CHILLI HUB VIỆT HÓA",
         CenterSub = "in game: Lấy trộm một quả trứng (Steal An Egg)",
-        Placeholder = "Nhập mã key tại đây (chillikey6h-...)...",
-        GetKey = "⚡ LẤY KEY (6 TIẾNG)",
+        Placeholder = "Nhập mã key tại đây (chillikey12h-...)...",
+        GetKey = "⚡ LẤY KEY (12 TIẾNG)",
         CheckKey = "✔ KÍCH HOẠT KEY",
-        Notice = "📌 Lưu ý: link getkey siêu đơn giản nhanh gọn chỉ mất 1 phút để vượt link, mỗi key có hạn sử dụng là 6 giờ từ khi kích hoạt.",
-        CopiedLink = "📋 ĐÃ SAO CHÉP LINK GETKEY 6 TIẾNG VÀO BỘ NHỚ TẠM!",
+        Notice = "📌 Lưu ý: link getkey siêu đơn giản nhanh gọn chỉ mất 1 phút để vượt link, mỗi key có hạn sử dụng là 12 giờ từ khi kích hoạt.",
+        CopiedLink = "📋 ĐÃ SAO CHÉP LINK GETKEY 12 TIẾNG VÀO BỘ NHỚ TẠM!",
         Checking = "ĐANG XÁC THỰC...",
-        CheckingMsg = "⏳ Đang đối soát bản quyền 6 tiếng trên máy chủ Chilli...",
+        CheckingMsg = "⏳ Đang đối soát bản quyền 12 tiếng trên máy chủ Chilli...",
         Success = "✔ Xác thực thành công! Đang tải Chilli Hub Việt Hóa...",
-        Error = "✖ Mã Key không chính xác hoặc phiên 6 giờ đã hết hạn!"
+        Error = "✖ Mã Key không chính xác hoặc phiên 12 giờ đã hết hạn!"
     },
     EN = {
         LangBtnText = "🇺🇸 EN ▾",
         SelectLangTitle = "🌶️ SELECT LANGUAGE / NGÔN NGỮ",
         Title = "Key Steam Chilli Hub",
-        Subtitle = "Chilli Hub Vietnamese · 6-Hour License",
+        Subtitle = "Chilli Hub Vietnamese · 12-Hour License",
         CenterTitle = "CHILLI HUB VIETNAMESE",
         CenterSub = "in game: Steal An Egg",
-        Placeholder = "Paste your 6h key here (chillikey6h-...)...",
-        GetKey = "⚡ GET KEY (6 HOURS)",
+        Placeholder = "Paste your 12h key here (chillikey12h-...)...",
+        GetKey = "⚡ GET KEY (12 HOURS)",
         CheckKey = "✔ ACTIVATE KEY",
-        Notice = "📌 Notice: Getting 6h key is super fast and easy (takes only 1 min), each key is valid for 6 hours from activation.",
-        CopiedLink = "📋 6-HOUR KEY LINK COPIED TO CLIPBOARD!",
+        Notice = "📌 Notice: Getting 12h key is super fast and easy (takes only 1 min), each key is valid for 12 hours from activation.",
+        CopiedLink = "📋 12-HOUR KEY LINK COPIED TO CLIPBOARD!",
         Checking = "AUTHENTICATING...",
-        CheckingMsg = "⏳ Verifying 6-hour license credentials on Chilli server...",
+        CheckingMsg = "⏳ Verifying 12-hour license credentials on Chilli server...",
         Success = "✔ Verification success! Launching Chilli Hub...",
-        Error = "✖ Invalid key or expired 6-hour license!"
+        Error = "✖ Invalid key or expired 12-hour license!"
     }
 }
 local CurrentLang = "VI"
@@ -525,7 +507,6 @@ OpenKeySystemUI = function()
     CloseBtn.Parent = HeaderBar
     Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 8)
 
-    -- LOGO TRUNG TÂM
     local CenterLogoBox = Instance.new("Frame")
     CenterLogoBox.Size = UDim2.new(0, 56, 0, 56)
     CenterLogoBox.Position = UDim2.new(0.5, -28, 0, 52)
@@ -567,7 +548,6 @@ OpenKeySystemUI = function()
     CenterSub.ZIndex = 31
     CenterSub.Parent = MainFrame
 
-    -- Ô NHẬP KEY
     local InputBox = Instance.new("TextBox")
     InputBox.Size = UDim2.new(1, -36, 0, 38)
     InputBox.Position = UDim2.new(0, 18, 0, 158)
@@ -585,7 +565,6 @@ OpenKeySystemUI = function()
     local InputStroke = Instance.new("UIStroke", InputBox)
     InputStroke.Color = Color3.fromRGB(60, 22, 28)
 
-    -- HÀNG NÚT BẤM
     local ButtonsRow = Instance.new("Frame")
     ButtonsRow.Size = UDim2.new(1, -36, 0, 40)
     ButtonsRow.Position = UDim2.new(0, 18, 0, 204)
@@ -624,7 +603,6 @@ OpenKeySystemUI = function()
     CheckStroke.Color = Color3.fromRGB(239, 68, 68)
     CheckStroke.Thickness = 1.4
 
-    -- BẢNG THÔNG BÁO LƯU Ý
     local NoticeCard = Instance.new("Frame")
     NoticeCard.Size = UDim2.new(1, -36, 0, 68)
     NoticeCard.Position = UDim2.new(0, 18, 0, 254)
@@ -653,16 +631,16 @@ OpenKeySystemUI = function()
     StatusMsg.Size = UDim2.new(1, -36, 0, 22)
     StatusMsg.Position = UDim2.new(0, 18, 0, 330)
     StatusMsg.BackgroundTransparency = 1
-    StatusMsg.Text = "Chilli Engine 6H · Security Guard Active"
+    StatusMsg.Text = "Chilli Engine 12H · Security Guard Active"
     StatusMsg.TextColor3 = Color3.fromRGB(150, 80, 90)
     StatusMsg.TextSize = 9.5
     StatusMsg.Font = Enum.Font.GothamMedium
     StatusMsg.ZIndex = 31
-    StatusMsg.Parent = MainFrame-- =========================================================================
---   🌶️ CHILLI HUB LOADER - BẢN FIX ĐỒNG BỘ MULTI-SLOT 6H (PHẦN 4/4) 🌶️
+    StatusMsg.Parent = MainFrame
+    -- =========================================================================
+--   🌶️ CHILLI HUB LOADER - BẢN ĐỒNG BỘ KEY 12 TIẾNG (PHẦN 4/4) 🌶️
 -- =========================================================================
 
-    -- MODAL CHỌN NGÔN NGỮ
     local LangModal = Instance.new("Frame")
     LangModal.Name = "LangModal"
     LangModal.Size = UDim2.new(1, 0, 1, 0)
@@ -799,12 +777,12 @@ OpenKeySystemUI = function()
         ScreenGui:Destroy()
     end)
 
-    -- Bấm LẤY KEY (6 TIẾNG)
+    -- Bấm LẤY KEY (12 TIẾNG)
     GetKeyBtn.MouseButton1Click:Connect(function()
         PlayDeepBounce(GetKeyBtn)
         if setclipboard then setclipboard(KeyUrl) elseif toclipboard then toclipboard(KeyUrl) end
         
-        GetKeyBtn.Text = "COPIED LINK (6H)!"
+        GetKeyBtn.Text = "COPIED LINK (12H)!"
         GetKeyBtn.BackgroundColor3 = Color3.fromRGB(16, 185, 129)
         GetKeyStroke.Color = Color3.fromRGB(52, 211, 153)
         StatusMsg.Text = Languages[CurrentLang].CopiedLink
@@ -815,13 +793,13 @@ OpenKeySystemUI = function()
                 GetKeyBtn.Text = Languages[CurrentLang].GetKey
                 GetKeyBtn.BackgroundColor3 = Color3.fromRGB(239, 68, 68)
                 GetKeyStroke.Color = Color3.fromRGB(249, 115, 22)
-                StatusMsg.Text = "Chilli Engine 6H · Security Guard Active"
+                StatusMsg.Text = "Chilli Engine 12H · Security Guard Active"
                 StatusMsg.TextColor3 = Color3.fromRGB(150, 80, 90)
             end
         end)
     end)
 
-    -- Bấm KÍCH HOẠT KEY (ĐỐI SOÁT QUA HỆ THỐNG MULTI-SLOT)
+    -- Bấm KÍCH HOẠT KEY (ĐỐI SOÁT QUA HỆ THỐNG 12H)
     local isChecking = false
     CheckKeyBtn.MouseButton1Click:Connect(function()
         if isChecking then return end
@@ -833,10 +811,10 @@ OpenKeySystemUI = function()
         StatusMsg.TextColor3 = Color3.fromRGB(254, 202, 202)
 
         task.wait(0.35)
-        local isKeyValid = CheckValidKeyMatch(InputBox.Text)
+        local isKeyValid = VerifyChilli12hKey(InputBox.Text)
 
         if isKeyValid then
-            Save6hKey()
+            Save12hKey()
             CheckKeyBtn.Text = "SUCCESS"
             CheckKeyBtn.BackgroundColor3 = Color3.fromRGB(22, 101, 52)
             CheckStroke.Color = Color3.fromRGB(74, 222, 128)
@@ -869,7 +847,7 @@ end
 
 local keyTimeLeft = GetKeyRemainingTime()
 if keyTimeLeft and keyTimeLeft > 0 then
-    ShowLiveToast("KEY STEAM CHILLI HUB • BẢN QUYỀN (6H)", keyTimeLeft, Color3.fromRGB(239, 68, 68))
+    ShowLiveToast("KEY STEAM CHILLI HUB • BẢN QUYỀN (12H)", keyTimeLeft, Color3.fromRGB(239, 68, 68))
     LaunchTargetScriptWithWatcher()
     return
 end
